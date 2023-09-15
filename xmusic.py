@@ -37,7 +37,7 @@ def ok(query_response: dict, quality_param: str):
 
 # Headers
 query_headers = {
-    "accept": "*/*",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36",
     "accept-language": "en-US,en;q=0.9",
     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
     "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
@@ -52,7 +52,7 @@ query_headers = {
 }
 
 convert_headers = {
-    "accept": "*/*",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36",
     "accept-language": "en-US,en;q=0.9",
     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
     "sec-ch-ua": "\"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"114\", \"Google Chrome\";v=\"114\"",
@@ -67,7 +67,7 @@ convert_headers = {
 }
 
 os.system("cls")
-download_directory: str = input(f"{BLUE}Playlist{END}: ")
+download_directory: str = input("Directory: ")
 print("\n")
 
 downloaded_count = 0
@@ -84,7 +84,7 @@ while True:
                                                  "q": url,
                                                  "vt": ft
                                              })
-
+    
     # Validate Query Response
     try:
         json_res: dict = query.json()
@@ -93,8 +93,7 @@ while True:
             continue
 
         # Initiate Conversion Request
-        conversion: requests.Response = requests.post("https://backend.svcenter.xyz/api/convert-by-"
-                                                      "45fc4be8916916ba3b8d61dd6e0d6994", headers=convert_headers,
+        conversion: requests.Response = requests.post("https://backend.svcenter.xyz/api/convert-by-45fc4be8916916ba3b8d61dd6e0d6994", headers=convert_headers,
                                                       data={
                                                           'v_id': json_res['vid'],
                                                           'ftype': ft,
@@ -103,7 +102,7 @@ while True:
                                                           'timeExpire': json_res['timeExpires'],
                                                           'client': 'X2Download.app',
                                                       })
-
+        
         # Validate Conversion Status
         con_json: dict = conversion.json()
 
@@ -128,6 +127,7 @@ while True:
 
         # Output Response
         download_response = requests.get(con_json.get("d_url"), stream=True)
+        print(con_json.get("d_url"))
 
         # Output Stream
         with open(f"{download_directory}/{final_filename}", "wb") as file:
